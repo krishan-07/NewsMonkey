@@ -26,33 +26,8 @@ export default class News extends Component {
     };
   }
 
-  handleNextClick = async () => {
-    const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=a7b708f6704942528384ae820c27e038&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`;
-    this.setState({ loading: true });
-    const data = await fetch(url);
-    const parsedData = await data.json();
-    this.setState({
-      articles: parsedData.articles,
-      page: this.state.page + 1,
-      loading: false
-    });
-  };
-
-  handlePrevClick = async () => {
-    const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=a7b708f6704942528384ae820c27e038&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`;
-    this.setState({ loading: true });
-    const data = await fetch(url);
-    const parsedData = await data.json();
-    this.setState({
-      articles: parsedData.articles,
-      page: this.state.page - 1,
-      loading: false
-    });
-
-  };
-
-  async componentDidMount() {
-    const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=a7b708f6704942528384ae820c27e038&pageSize=${this.props.pageSize}&pageSize=${this.props.pageSize}`;
+  async updatePage () {
+    const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=a7b708f6704942528384ae820c27e038&page=${this.state.page}&pageSize=${this.props.pageSize}`;
     this.setState({ loading: true });
     const data = await fetch(url);
     const parsedData = await data.json();
@@ -61,6 +36,20 @@ export default class News extends Component {
       totalResults: parsedData.totalResults,
       loading: false
     });
+  }
+
+  handleNextClick = async() => {
+    await this.setState({page : this.state.page + 1})
+    this.updatePage();
+  };
+
+  handlePrevClick = async() => {
+    await this.setState({page : this.state.page - 1})
+    this.updatePage();
+  };
+
+  componentDidMount() {
+    this.updatePage();
   }
 
   render() {
